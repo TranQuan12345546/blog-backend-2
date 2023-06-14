@@ -6,6 +6,8 @@ import com.example.blog.entity.Blog;
 import com.example.blog.request.UpsertBlogRequest;
 import com.example.blog.service.BlogService;
 import com.example.blog.service.CategoryService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -57,5 +59,20 @@ public class BlogController {
     }
 
     @PostMapping("api/v1/admin/blogs")
-    public ResponseEntity<?> addBlog()
+    public ResponseEntity<?> addBlog(@RequestBody UpsertBlogRequest upsertBlogRequest) {
+        Blog blog = blogService.addBlog(upsertBlogRequest);
+        return ResponseEntity.ok(blog);
+    }
+
+    @PutMapping("api/v1/admin/blogs/{id}")
+    public ResponseEntity<?> updateBlog(@PathVariable int id, @RequestBody UpsertBlogRequest upsertBlogRequest) {
+        Blog blog = blogService.updateBlog(id, upsertBlogRequest);
+        return ResponseEntity.ok(blog);
+    }
+
+    @DeleteMapping("api/v1/admin/blogs/{id}")
+    public ResponseEntity<?> deleteBlog(@PathVariable int id) {
+        blogService.deleteBlog(id);
+        return ResponseEntity.ok("Delete Success");
+    }
 }

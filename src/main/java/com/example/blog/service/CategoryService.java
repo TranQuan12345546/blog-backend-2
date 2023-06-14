@@ -49,7 +49,7 @@ public class CategoryService {
     }
 
     public Page<Category> getAllCategory(int page, int pageSize) {
-        Page<Category> categoryPublics = categoryRepository.findAll(PageRequest.of(page, pageSize));
-        return categoryPublics;
+        Page<Category> categories = categoryRepository.findAll(PageRequest.of(page, pageSize));
+        return categories;
     }
 }

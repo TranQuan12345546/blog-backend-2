@@ -5,6 +5,7 @@ import com.example.blog.entity.Category;
 import com.example.blog.repository.CategoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,7 +48,8 @@ public class CategoryService {
         categoryRepository.delete(category);
     }
 
-    public Page<CategoryPublic> getAllCategory(int page, int pageSize) {
-
+    public Page<Category> getAllCategory(int page, int pageSize) {
+        Page<Category> categoryPublics = categoryRepository.findAll(PageRequest.of(page, pageSize));
+        return categoryPublics;
     }
 }

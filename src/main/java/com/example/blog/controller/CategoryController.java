@@ -20,7 +20,7 @@ public class CategoryController {
     public String getAllCategory(@RequestParam(required = false, defaultValue = "1") int page,
                                  @RequestParam(required = false, defaultValue = "10") int pageSize,
                                  Model model) {
-        Page<CategoryPublic> pageInfo = categoryService.getAllCategory(page, pageSize);
+        Page<Category> pageInfo = categoryService.getAllCategory(page, pageSize);
         model.addAttribute("page", pageInfo);
         return "/admin/category/category-list";
     }

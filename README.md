@@ -30,3 +30,22 @@ Workflow xử lý trong Spring Security bao gồm các bước sau:
 
 7. Hoàn tất quá trình xử lý: Khi quá trình xác thực và ủy quyền hoàn tất, Spring Security cho phép yêu cầu tiếp tục xử lý và trả về kết quả
 
+Session là một khái niệm để lưu trữ và quản lý thông tin trạng thái của người dùng trong suốt phiên làm việc trên một trang web.
+
+Khi một người dùng truy cập vào một trang web, một session mới sẽ được tạo ra trên phía server để lưu trữ thông tin liên quan đến người dùng. Session bao gồm các biến và giá trị được lưu trữ trong bộ nhớ trên server và được liên kết với người dùng thông qua một ID duy nhất. ID session thường được gửi đến trình duyệt của người dùng thông qua cookie hoặc tham số truy vấn.
+
+Cookie là một đoạn dữ liệu nhỏ được lưu trữ trên trình duyệt của người dùng. Nó được sử dụng để lưu trữ thông tin về phiên làm việc, cài đặt ngôn ngữ, tuỳ chọn cá nhân và các dữ liệu khác liên quan đến trạng thái và ưu tiên của người dùng trên các trang web. Khi người dùng truy cập lại trang web, trình duyệt sẽ gửi cookie đến server để định danh và cung cấp thông tin cần thiết.
+
+Sự khác biệt giữa session và cookie:
+1. Session:
+
+Lưu trữ trên phía server: Session được tạo và lưu trữ trên phía server. Mỗi session có một ID duy nhất được gửi đến trình duyệt của người dùng thông qua cookie hoặc tham số truy vấn.
+Dữ liệu lưu trữ: Session có thể lưu trữ nhiều thông tin liên quan đến người dùng, bao gồm thông tin đăng nhập, giỏ hàng, trạng thái phiên làm việc và các dữ liệu khác.
+Bảo mật: Thông tin trong session được lưu trữ trên server và không được truy cập trực tiếp từ phía client, điều này giúp bảo mật hơn so với cookie.
+Thời gian sống: Session có thời gian sống giới hạn, được xác định bởi cấu hình của server. Khi thời gian sống session hết, session sẽ bị hủy và thông tin liên quan đến người dùng sẽ bị mất.
+2. Cookie:
+
+Lưu trữ trên phía client: Cookie được tạo ra và lưu trữ trên phía client, tức là trình duyệt của người dùng.
+Dữ liệu lưu trữ: Cookie thường được sử dụng để lưu trữ thông tin nhỏ gọn như ID session, thông tin đăng nhập, tuỳ chọn ngôn ngữ, quyền truy cập và các dữ liệu nhỏ khác.
+Bảo mật: Cookie được lưu trữ trên client và có thể bị truy cập hoặc chỉnh sửa bởi người dùng hoặc các công cụ khác. Để bảo mật thông tin quan trọng, thông tin nhạy cảm thường không được lưu trữ trong cookie.
+Thời gian sống: Cookie có thể có thời gian sống giới hạn, được xác định khi tạo cookie. Một số cookie có thời gian sống chỉ trong phiên làm việc (session cookie), trong khi các cookie khác có thể tồn tại trong một khoảng thời gian dài (persistent cookie).

@@ -15,7 +15,6 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/files")
 @AllArgsConstructor
-@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class ImageController {
     private final ImageService imageService;
 

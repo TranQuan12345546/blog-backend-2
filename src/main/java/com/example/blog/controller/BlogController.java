@@ -46,7 +46,7 @@ public class BlogController {
 
     // Danh sách bài viết của tôi
     @GetMapping("/admin/blogs/own-blogs")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('AUTHOR')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_AUTHOR')")
     public String getOwnBlogPage(Model model) {
         List<BlogPublic> blogList = blogService.getAllOwnBlog();
         model.addAttribute("blogList", blogList);
@@ -55,7 +55,7 @@ public class BlogController {
 
     // Tạo bài viết
     @GetMapping("/admin/blogs/create")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('AUTHOR')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_AUTHOR')")
     public String getBlogCreatePage(Model model) {
         List<CategoryPublic> categoryList = categoryService.getAllCategory();
         model.addAttribute("categoryList", categoryList);
@@ -64,7 +64,7 @@ public class BlogController {
 
     // Chi tiết bài viết
     @GetMapping("/admin/blogs/{id}/detail")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('AUTHOR')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_AUTHOR')")
     public String getBlogDetailPage(@PathVariable Integer id, Model model) {
         BlogPublic blog = blogService.getBlogById(id);
         List<CategoryPublic> categoryList = categoryService.getAllCategory();
@@ -77,21 +77,21 @@ public class BlogController {
     // Danh sách API
     // 1. Tạo bài viết
     @PostMapping("/api/v1/admin/blogs")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_AUTHOR') ")
     public ResponseEntity<?> createBlog(@RequestBody UpsertBlogRequest request) {
         return new ResponseEntity<>(blogService.createBlog(request), HttpStatus.CREATED); // 201
     }
 
     // 2. Cập nhật bài viết
     @PutMapping("/api/v1/admin/blogs/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_AUTHOR')")
     public ResponseEntity<?> updateBlog(@PathVariable Integer id, @RequestBody UpsertBlogRequest request) {
         return ResponseEntity.ok(blogService.updateBlog(id, request)); // 200
     }
 
     // 3. Xóa bài viết
     @DeleteMapping("/api/v1/admin/blogs/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_AUTHOR')" )
     public ResponseEntity<?> deleteBlog(@PathVariable Integer id) {
         blogService.deleteBlog(id);
         return ResponseEntity.noContent().build(); // 204

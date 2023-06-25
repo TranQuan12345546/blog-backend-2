@@ -18,7 +18,6 @@ import java.util.List;
 
 @Controller
 @AllArgsConstructor
-@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class BlogController {
     private final BlogService blogService;
     private final CategoryService categoryService;
@@ -35,6 +34,7 @@ public class BlogController {
 
     // Danh sách tất cả bài viết
     @GetMapping("/admin/blogs")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String getBlogPage(@RequestParam(required = false, defaultValue = "1") Integer page,
                               @RequestParam(required = false, defaultValue = "10") Integer pageSize,
                               Model model) {
@@ -77,18 +77,21 @@ public class BlogController {
     // Danh sách API
     // 1. Tạo bài viết
     @PostMapping("/api/v1/admin/blogs")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> createBlog(@RequestBody UpsertBlogRequest request) {
         return new ResponseEntity<>(blogService.createBlog(request), HttpStatus.CREATED); // 201
     }
 
     // 2. Cập nhật bài viết
     @PutMapping("/api/v1/admin/blogs/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> updateBlog(@PathVariable Integer id, @RequestBody UpsertBlogRequest request) {
         return ResponseEntity.ok(blogService.updateBlog(id, request)); // 200
     }
 
     // 3. Xóa bài viết
     @DeleteMapping("/api/v1/admin/blogs/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> deleteBlog(@PathVariable Integer id) {
         blogService.deleteBlog(id);
         return ResponseEntity.noContent().build(); // 204

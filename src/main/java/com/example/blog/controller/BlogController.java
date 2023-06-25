@@ -18,6 +18,7 @@ import java.util.List;
 
 @Controller
 @AllArgsConstructor
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class BlogController {
     private final BlogService blogService;
     private final CategoryService categoryService;
@@ -34,7 +35,6 @@ public class BlogController {
 
     // Danh sách tất cả bài viết
     @GetMapping("/admin/blogs")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String getBlogPage(@RequestParam(required = false, defaultValue = "1") Integer page,
                               @RequestParam(required = false, defaultValue = "10") Integer pageSize,
                               Model model) {
@@ -46,7 +46,7 @@ public class BlogController {
 
     // Danh sách bài viết của tôi
     @GetMapping("/admin/blogs/own-blogs")
-    @PreAuthorize("hasRole('ROLE_AUTHOR')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('AUTHOR')")
     public String getOwnBlogPage(Model model) {
         List<BlogPublic> blogList = blogService.getAllOwnBlog();
         model.addAttribute("blogList", blogList);
@@ -55,7 +55,7 @@ public class BlogController {
 
     // Tạo bài viết
     @GetMapping("/admin/blogs/create")
-    @PreAuthorize("hasRole('ROLE_AUTHOR')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('AUTHOR')")
     public String getBlogCreatePage(Model model) {
         List<CategoryPublic> categoryList = categoryService.getAllCategory();
         model.addAttribute("categoryList", categoryList);
@@ -64,6 +64,7 @@ public class BlogController {
 
     // Chi tiết bài viết
     @GetMapping("/admin/blogs/{id}/detail")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('AUTHOR')")
     public String getBlogDetailPage(@PathVariable Integer id, Model model) {
         BlogPublic blog = blogService.getBlogById(id);
         List<CategoryPublic> categoryList = categoryService.getAllCategory();

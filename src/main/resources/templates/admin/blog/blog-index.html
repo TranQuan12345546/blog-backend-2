@@ -80,7 +80,7 @@
                                            class="page-link">Previous</a>
                                     </li>
                                     <th:block th:with="numbers = ${T(com.example.blog.utils.Utils).createList(page.getTotalPages())}">
-                                        <li th:each="number : ${numbers}" class="paginate_button page-item" th:classappend="${number == currentPage ? 'active disabled' : ''}">
+                                        <li th:each="number : ${numbers}" class="paginate_button page-item" th:classappend="${number == currentPage ? 'active' : ''}">
                                             <a th:href="@{/admin/blogs?page={pageNumber} (pageNumber=${number})}" aria-controls="example2" data-dt-idx="1" tabindex="0"
                                                class="page-link" th:text="${number}">1</a>
                                         </li>

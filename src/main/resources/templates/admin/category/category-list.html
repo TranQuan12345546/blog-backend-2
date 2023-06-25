@@ -1,10 +1,183 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{/layout/layout-admin :: main-fragment(~{:: title}, ~{}, ~{:: .content-wrapper}, ~{:: #js})}">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Danh mục</title>
 </head>
+
 <body>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-12">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="#">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            Tất cả danh mục
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row py-2">
+                <div class="col-12">
+                    <button type="button" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Tạo danh mục
+                    </button>
+                    <button type="button" class="btn btn-info">
+                        <i class="fas fa-redo"></i> Refresh
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Danh mục</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody id="category-list">
+                                <tr th:each="category : ${categoryPage.content}" >
+                                    <td th:text="${category.id}">1</td>
+                                    <td th:text="${category.name}">Backend</td>
+                                    <td>
+                                        <button class="btn update btn-warning">Sửa</button>
+                                        <button class="btn delete btn-danger">Xóa</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="d-flex justify-content-center mt-3" id="pagination">
+                                <ul class="pagination mb-0">
+                                    <li class="paginate_button page-item previous" th:classappend="${currentPage == 1 ? 'disabled' : ''}"
+                                        id="example2_previous">
+                                        <a th:href="@{/admin/categories?page={pageNumber} (pageNumber=${currentPage-1})}" aria-controls="example2" data-dt-idx="0" tabindex="0"
+                                           class="page-link">Previous</a>
+                                    </li>
+                                    <th:block th:with="numbers = ${T(com.example.blog.utils.Utils).createList(categoryPage.getTotalPages())}">
+                                        <li th:each="number : ${numbers}" class="paginate_button page-item" th:classappend="${number == currentPage ? 'active' : ''}">
+                                            <a th:href="@{/admin/categories?page={pageNumber} (pageNumber=${number})}" aria-controls="example2" data-dt-idx="1" tabindex="0"
+                                               class="page-link" th:text="${number}">1</a>
+                                        </li>
+                                    </th:block>
+                                    <li class="paginate_button page-item next" th:classappend="${currentPage == categoryPage.getTotalPages() ? 'disabled' : ''}"
+                                        id="example2_next">
+                                        <a th:href="@{/admin/blogs?page={pageNumber} (pageNumber=${currentPage+1})}" aria-controls="example2" data-dt-idx="7" tabindex="0"
+                                           class="page-link">Next</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<th:block id="js">
+    <script  th:inline="javascript">
+
+        // tạo category
+        const btnCreate = document.querySelector('.btn-primary');
+        btnCreate.addEventListener('click', async () => {
+            let name = window.prompt("Nhập tên category:", "Ruby");
+            const url = `/admin/categories/create?name=${name}`;
+
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Nếu yêu cầu thành công (status code 200-299)
+                        toastr.success("Tạo category thành công");
+                    } else {
+                        // Nếu yêu cầu không thành công
+                        toastr.error("Tạo category không thành công");
+                        throw new Error("Yêu cầu không thành công");
+                    }
+                })
+        })
+
+        // xoá category
+        const deleteButtons = document.querySelectorAll('.delete');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', async function(event) {
+                if(window.confirm("Bạn có muốn xoá không?")) {
+                    const row = event.target.closest('tr');
+                    const categoryId = row.querySelector('td:first-child').textContent;
+
+                    // Gửi yêu cầu xóa danh mục đến máy chủ
+                    const url = `/api/v1/admin/categories/${categoryId}`;
+
+                    const response = await fetch(url, {
+                        method: "DELETE",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                toastr.success("Xoá category thành công");
+                                row.remove();
+                            } else {
+                                toastr.error("Không thể xoá")
+                            }
+                        })
+
+                }
+            });
+        });
+
+        // update category
+
+        const updateButtons = document.querySelectorAll('.update');
+        updateButtons.forEach(btn => {
+            btn.addEventListener('click', async function (event) {
+                const row = event.target.closest('tr');
+                const categoryId = row.querySelector('td:first-child').textContent;
+                const categoryName = row.querySelector('td:nth-child(2)').textContent;
+
+                let name = window.prompt("Nhập tên category:", `${categoryName}`);
+                const url = `/api/v1/admin/categories/${categoryId}?name=${name}`;
+
+                await fetch(url, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            toastr.success("Update category thành công");
+                        } else {
+                            // Nếu yêu cầu không thành công
+                            toastr.error("Update category không thành công");
+                        }
+                    })
+            })
+        } )
+    </script>;
+</th:block>
 
 </body>
+
 </html>

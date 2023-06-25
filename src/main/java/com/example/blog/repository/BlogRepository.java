@@ -27,5 +27,4 @@ public interface BlogRepository extends JpaRepository<Blog, Integer> {
     Page<BlogPublic> findByUser_IdOrderByCreatedAtDesc(Integer id, Pageable pageable);
 
     List<BlogPublic> findByUser_IdOrderByCreatedAtDesc(Integer id);
-
 }

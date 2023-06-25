@@ -6,6 +6,7 @@ import com.github.slugify.Slugify;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,8 @@ import java.util.Random;
 
 @SpringBootTest
 class BlogBackendApplicationTests {
+    @Autowired
+    private PasswordEncoder encoder;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -47,9 +50,9 @@ class BlogBackendApplicationTests {
         Role authorRole = roleRepository.findByName("AUTHOR").orElse(null);
 
         List<User> users = List.of(
-                new User(null, "Bùi Hiên", "hien@gmail.com", "111", null, List.of(adminRole, userRole)),
-                new User(null, "Minh Duy", "duy@gmail.com", "111", null, List.of(userRole)),
-                new User(null, "Thu Hằng", "hang@gmail.com","111", null, List.of(authorRole, userRole))
+                new User(null, "Bùi Hiên", "hiedfsdfsdfsdfsdfsfn@gmail.com", encoder.encode("111"), null, List.of(adminRole, userRole)),
+                new User(null, "Minh Duy", "dusdfsdfsdfy@gmail.com", encoder.encode("111"), null, List.of(userRole)),
+                new User(null, "Thu Hằng", "hasdfsdfsdfng@gmail.com",encoder.encode("111"), null, List.of(authorRole, userRole))
         );
 
         userRepository.saveAll(users);

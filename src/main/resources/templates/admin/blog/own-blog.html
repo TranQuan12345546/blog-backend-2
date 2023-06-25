@@ -94,7 +94,7 @@
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script th:inline="javascript">
-        const blogList = [[${blogList}]];
+        const blogList = /*[[${blogList}]]*/;
         console.log(blogList);
 
         // Hiển thị danh sách blog
@@ -118,7 +118,7 @@
                 }).join("")}
                                     </td>
                                     <td>${blog.status ? 'Công khai' : 'Nháp'}</td>
-                                    <td>${new Date(`${blog.createdAt}`).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric'})}</td>
+                                    <td>${blog.createdAt}</td>
                                 </tr>
                 `
             })

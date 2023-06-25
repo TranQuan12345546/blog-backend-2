@@ -1,43 +1,51 @@
 package com.example.blog.controller;
 
 import com.example.blog.entity.Image;
-import com.example.blog.service.FileService;
+import com.example.blog.service.ImageService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("api/v1/files")
 @AllArgsConstructor
 public class ImageController {
-    private FileService fileService;
-    @PostMapping("api/v1/files")
-    public ResponseEntity<?> uploadImage(@RequestBody MultipartFile file) {
-        Image image = fileService.uploadImage(file);
-        return ResponseEntity.ok("Upload success");
+    private final ImageService imageService;
+
+    // 1. Lấy danh sách file của user đang login
+    @GetMapping()
+    public ResponseEntity<?> deleteFile() {
+        List<Image> imageList = imageService.getFilesOfUser();
+        return ResponseEntity.ok(imageList);
     }
 
-    @GetMapping("api/v1/files/{id}")
-    public ResponseEntity<?> getImage(@PathVariable int id) {
-        Image image = fileService.getImage(id);
-        return ResponseEntity.ok()
+    // 2. Upload file
+    @PostMapping("")
+    public ResponseEntity<?> uploadFile(@ModelAttribute("file") MultipartFile file) {
+        Image image = imageService.uploadFile(file);
+        return new ResponseEntity<>(image, HttpStatus.CREATED);
+    }
+
+    // 3. Xem thông tin file
+    @GetMapping("{id}")
+    public ResponseEntity<?> readFile(@PathVariable Integer id) {
+        Image image = imageService.readFile(id);
+        return ResponseEntity
+                .ok()
                 .contentType(MediaType.parseMediaType(image.getType()))
                 .body(image.getData());
     }
 
-    @GetMapping("api/v1/users/{id}/files")
-    public ResponseEntity<?> getAllImageUserLogin(@PathVariable int id) {
-        List<Image> images= fileService.getFilesOfUser(id);
-        return ResponseEntity.ok(images);
-    }
-
-    @DeleteMapping("api/v1/files/{id}")
-    public ResponseEntity<?> deleteImageUserLogin(@PathVariable int id) {
-        fileService.deleteImageUserLogin(id);
-        return ResponseEntity.ok("delete success");
+    // 4. Xóa file
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deleteFile(@PathVariable Integer id) {
+        imageService.deleteFile(id);
+        return ResponseEntity.noContent().build();
     }
 }
+

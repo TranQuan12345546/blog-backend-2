@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -17,6 +18,8 @@ import java.util.List;
 @AllArgsConstructor
 public class WebController {
     private final WebService webService;
+
+
 
     @GetMapping("/")
     public String getAllBlog(
@@ -33,19 +36,19 @@ public class WebController {
         return "web/main";
     }
 
-    @GetMapping("search")
+    @GetMapping("/search")
     public String searchBlog() {
         return "web/search";
     }
 
-    @GetMapping("categories")
+    @GetMapping("/categories")
     public String getAllCategory(Model model) {
         List<CategoryWebPublic> categoryList = webService.getAllCategory();
         model.addAttribute("categoryList", categoryList);
         return "web/tag";
     }
 
-    @GetMapping("categories/{categoryName}")
+    @GetMapping("/categories/{categoryName}")
     public String getBlogsOfCategory(@PathVariable String categoryName, Model model) {
         List<BlogPublic> blogList = webService.getBlogsOfCategory(categoryName);
         model.addAttribute("categoryName", categoryName);
@@ -53,7 +56,7 @@ public class WebController {
         return "web/tagDetail";
     }
 
-    @GetMapping("blogs/{blogId}/{blogSlug}")
+    @GetMapping("/blogs/{blogId}/{blogSlug}")
     public String getBlogDetail(@PathVariable Integer blogId, @PathVariable String blogSlug, Model model) {
         BlogPublic blogPublic = webService.getBlogDetail(blogId, blogSlug);
         model.addAttribute("blog", blogPublic);
